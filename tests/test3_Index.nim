@@ -46,9 +46,11 @@ suite "Indexes":
             ct.commit
 
     proc createLengthIndex() =
-        index = coll.openIndex("lengths") do (value: DataOut, emit: EmitFunc):
+        index = coll.openIndex("lengths") do (value: DataOut, emit: EmitFunc) {.noSideEffect.}:
             #debugEcho "INDEXING ", ($value).escape
-            emit collatable(($value).len)
+            #TODO: Fix Macro `collatable`.
+            {.cast(noSideEffect).}:
+              emit collatable(($value).len)
 
     proc createWordIndex() =
         ## Creates an index on the words in the source collection; a simple form of full-text search.
@@ -64,6 +66,8 @@ suite "Indexes":
 
         index = coll.openIndex("words") do (value: DataOut, emit: EmitFunc):
             for word, start in tokenizeForIndex(value):
+              #TODO: Fix Macro `collatable`.
+              {.cast(noSideEffect).}:
                 emit collatable(word), collatable(start)
 
     proc dumpIndex(snap: CollectionSnapshot): (seq[string], seq[string]) =
