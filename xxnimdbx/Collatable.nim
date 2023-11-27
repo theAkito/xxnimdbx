@@ -125,6 +125,7 @@ proc readInt(buf: seq[byte] | MDBX_val, tag: byte, pos: var int): int64 =
 
 
 macro collatable*(args: varargs[typed]): Collatable =
+    #TODO: Fix Macro to not have side effects.
     ## Creates a new Collatable and adds the arguments to it (by calling `add`.)
     ## With no arguments, it creates an empty Collatable that you can add items to with `add`.
 
@@ -293,11 +294,11 @@ type CollatableType* = enum
 
 type Item* = object
     ## A value read from a Collatable.
-    case type*: CollatableType
-        of NullType:    discard
-        of BoolType:    boolValue*: bool
-        of IntType:     intValue*: int64
-        of StringType:  stringValue*: string
+    case `type`*: CollatableType
+      of NullType:    discard
+      of BoolType:    boolValue*: bool
+      of IntType:     intValue*: int64
+      of StringType:  stringValue*: string
 
 
 func asCollatable*(data: seq[byte]): Collatable =
@@ -317,25 +318,37 @@ iterator items*(coll: CollatableAny): Item {.closure.} =
     while pos < coll.data.len:
         let tag = coll.data[pos]
         pos += 1
-        case tag:
+        case tag: ## https://github.com/nim-lang/Nim/issues/18977#issuecomment-939425892
             of NullTag:
-                item.type = NullType
+                item = Item(
+                  `type`: NullType
+                )
             of FalseTag:
-                item.type = BoolType
-                item.boolValue = false
+                item = Item(
+                  `type`: BoolType,
+                  boolValue: false
+                )
             of TrueTag:
-                item.type = BoolType
-                item.boolValue = true
+                item = Item(
+                  `type`: BoolType,
+                  boolValue: true
+                )
             of NegIntTags..PosIntTags+0x0f:
-                item.type = IntType
-                item.intValue = readInt(coll.data, tag, pos)
+                item = Item(
+                  `type`: IntType,
+                  intValue: readInt(coll.data, tag, pos)
+                )
             of StringTags..StringTags+0x0f:
-                item.type = StringType
+                var value: string
                 let start = pos
                 while coll.data[pos] != 0:
                     pos += 1
-                item.stringValue = cast[string](coll.data[start ..< pos])
+                value = cast[string](coll.data[start ..< pos])
                 pos += 1
+                item = Item(
+                  `type`: StringType,
+                  stringValue: value
+                )
             else:
                 raise newException(ValueError, "Corrupted Collatable (unknown tag)")
         yield item
@@ -351,7 +364,7 @@ func `[]`*(coll: CollatableAny, index: Natural): Item =
         if index == 0:
             return item
         index -= 1
-    return Item(type: NullType)
+    return Item(`type`: NullType)
 
 
 #%%%%%%%% STRING CONVERSION:
@@ -359,7 +372,7 @@ func `[]`*(coll: CollatableAny, index: Natural): Item =
 
 func `$`*(o: Item): string =
     ## Converts an item to a string, in JSON format.
-    case o.type:
+    case o.`type`:
         of NullType:    return "null"
         of BoolType:    return $o.boolValue
         of IntType:     return $o.intValue
