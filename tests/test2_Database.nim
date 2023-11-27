@@ -3,7 +3,7 @@
 {.experimental: "notnil".}
 
 import strformat, unittest
-import nimdbx
+import xxnimdbx
 
 
 let DBPath = "test_db"

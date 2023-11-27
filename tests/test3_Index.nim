@@ -4,7 +4,7 @@
 
 import unittest, strutils, sets, tables
 
-import nimdbx
+import xxnimdbx
 
 
 const DBPath = "test_db"

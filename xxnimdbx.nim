@@ -1,6 +1,6 @@
 # mdbx.nim
 
-import nimdbx/[Collatable, Collection, CRUD, Cursor, Data, Database, Error, Index, Transaction]
+import xxnimdbx/[Collatable, Collection, CRUD, Cursor, Data, Database, Error, Index, Transaction]
 
 export Collatable
 export Collection

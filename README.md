@@ -1,3 +1,11 @@
+## Fork by Akito
+
+I forked this project to bring it up to speed and port it to Nim 2.0.0.
+
+~  Akito
+
+____
+
 **April 2023:** In light of statements made by Leonid Yuriev in the [libmdx README](https://abf.io/erthink/libmdbx/blob/master/README.md), I'm abandoning this project and archiving the repo. Namely:
 
 >However, _MithrilDB_ [the successor to libmdbx] will not be available for countries unfriendly to
@@ -17,7 +25,7 @@ Unfortunately I'm not aware of a good alternative to libmdbx. Its ancestor LMDB 
 
 ----
 
-# nimdbx
+# xxnimdbx
 
 An extremely fast persistent key-value store for the [Nim](https://nim-lang.org) language, based on the amazing [MDBX](https://abf.io/erthink/libmdbx) library.
 
@@ -86,15 +94,15 @@ Because of this, it's important not to leave snapshots around too long. As long 
 
 ## Building
 
-If you're using NimDBX, simply install it with `nimble install nimdbx`, then in your source code `import nimdbx`.
+If you're using NimDBX, simply install it with `nimble install xxnimdbx`, then in your source code `import xxnimdbx`.
 
-Behind the scenes, NimDBX uses [Nimterop](https://github.com/nimterop/nimterop) to build the libmdbx C library and generate the Nim bridging header. One visible side effect of this is that libmdbx isn't built until the first time you compile something that imports `nimdbx`. In general this should result only in some extra build output like:
+Behind the scenes, NimDBX uses [Nimterop](https://github.com/nimterop/nimterop) to build the libmdbx C library and generate the Nim bridging header. One visible side effect of this is that libmdbx isn't built until the first time you compile something that imports `xxnimdbx`. In general this should result only in some extra build output like:
 
 ```
 # Running make
-#   Path: ~/.nimble/pkgs/nimdbx/libmdbx-dist
-# Including library ~/.nimble/pkgs/nimdbx/libmdbx-dist/libmdbx.a
-# Importing ~/.nimble/pkgs/nimdbx/libmdbx-dist/mdbx.h
+#   Path: ~/.nimble/pkgs/xxnimdbx/libmdbx-dist
+# Including library ~/.nimble/pkgs/xxnimdbx/libmdbx-dist/libmdbx.a
+# Importing ~/.nimble/pkgs/xxnimdbx/libmdbx-dist/mdbx.h
 # Saved to ~/.cache/nim/nimterop/toastCache/nimterop_4071036711.nim
 ```
 

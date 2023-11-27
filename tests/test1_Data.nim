@@ -1,7 +1,7 @@
 # testCollatable.nim
 
 import unittest
-import nimdbx/[Collatable, Data]
+import xxnimdbx/[Collatable, Data]
 
 
 suite "Data":
