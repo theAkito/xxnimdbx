@@ -1,0 +1,23 @@
+name: BuildTest
+
+on: [push]
+
+jobs:
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macOS-latest
+          - ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v3
+      - name: Install Nim 2.0.0
+        uses: jiro4989/setup-nim-action@v1
+        with:
+          nim-version: '2.0.0'
+      - name: Build and Test
+        run: nimble test --verbose --accept
