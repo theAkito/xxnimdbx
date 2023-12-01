@@ -9,4 +9,4 @@ installDirs   = @["xxnimdbx", "libmdbx-dist"]
 # Dependencies
 
 requires "nim >= 2.0.0"
-requires "nimterop >= 0.6.13"
+requires "https://github.com/theAkito/xxnimterop.git == 0.6.14"

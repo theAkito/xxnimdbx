@@ -4,7 +4,7 @@
 # The generated wrapper is implicitly imported by importing this file.
 #
 
-import nimterop/[build, cimport], os, strutils
+import xxnimterop/[build, cimport], os, strutils
 
 #static: cDebug()  # Prints wrapper to stdout
 
