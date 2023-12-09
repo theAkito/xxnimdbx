@@ -47,7 +47,7 @@ type
         WaitForUnused = 2   ## Blocks until all other processes have closed the Database
 
 
-proc `=destroy`(db: var DatabaseObj) =
+proc `=destroy`(db: DatabaseObj) =
     if db.m_env != nil:
         discard mdbx_env_close(db.m_env)
 

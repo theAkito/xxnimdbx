@@ -29,7 +29,7 @@ type Data* = object
 
 # Disallow copying `Data`, to discourage keeping it around, since it often contains a pointer to
 # ephemeral local data provided by the caller.
-proc `=`(dst: var Data, src: Data) {.error.}
+proc `=copy`(dst: var Data, src: Data) {.error.}
 
 proc clear*(d: var Data) =
     d.kind = stringData
@@ -53,7 +53,7 @@ template raw*(d: Data): MDBX_val =
 
 proc mkData[A](a: openarray[A]): Data {.inline.} =
     # Creates a Data that points at the contents of an array/seq/string.
-    result.kind = stringData
+    result = Data(kind: stringData) # Creating new object, because... "Warning: Potential object case transition, instantiate new object instead [CaseTransition]"
     if a.len > 0:
         result.m_val = mkVal(a)
 
@@ -109,7 +109,7 @@ type DataOut* = object
 # Disallow copying `DataOut`, to discourage keeping it around. A `DataOut`'s pointer becomes invalid
 # when the Snapshot or Transaction used to get it ends, because it points to an address inside the
 # memory-mapped database.
-proc `=`(dst: var DataOut, src: DataOut) {.error.}
+proc `=copy`(dst: var DataOut, src: DataOut) {.error.}
 
 converter exists*(d: DataOut): bool {.inline} = d.val.exists
 proc `not`*(d: DataOut): bool {.inline}       = not d.exists

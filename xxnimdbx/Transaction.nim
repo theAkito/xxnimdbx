@@ -32,9 +32,9 @@ type
         ## processes.
 
 
-proc `=`(dst: var SnapshotObj, src: SnapshotObj) {.error.}
+proc `=copy`(dst: var SnapshotObj, src: SnapshotObj) {.error.}
 proc `=sink`(dst: var SnapshotObj, src: SnapshotObj) {.error.}
-proc `=destroy`(snap: var SnapshotObj) =
+proc `=destroy`(snap: SnapshotObj) =
     if snap.m_txn != nil and snap.database.isOpen:
         discard mdbx_txn_abort(snap.m_txn)
 
@@ -242,8 +242,6 @@ proc stats*(coll: Collection not nil): MDBX_stat =
     ## Returns low-level information about a Collection.
     return coll.beginSnapshot().stats()
 
-
-type CollectionNotNil = Collection not nil
 
 proc entryCount*(coll: Collection not nil): int =
     ## The number of key/value pairs in the collection.

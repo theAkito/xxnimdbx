@@ -19,9 +19,9 @@ type
         positioned: bool
 
 
-proc `=`(dst: var Cursor, src: Cursor) {.error.}
+proc `=copy`(dst: var Cursor, src: Cursor) {.error.}
 
-proc `=destroy`(curs: var Cursor) =
+proc `=destroy`(curs: Cursor) =
     if curs.curs != nil:
         mdbx_cursor_close(curs.curs)
 
