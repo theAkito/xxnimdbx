@@ -94,6 +94,16 @@ proc openDBI(db: Database, name: string, flags: MDBX_db_flags_t): (MDBX_dbi, boo
     return (dbi, preexisting);
 
 
+proc closeDBI(db: Database, name: string): bool =
+  ## The low-level code to close a collection, i.e. an MDBX_dbi.
+  ## https://libmdbx.dqdkfa.ru/group__c__dbi.html#ga8d23ee97867170f184fc8f7faa80e392
+  if not db.i_collections.hasKey(name): return true
+  let clt = Collection(db.i_collections.getOrDefault(name))
+  if clt.isNil: return true
+  result = mdbx_dbi_close(db.i_env, clt.m_dbi) == 0
+  db.i_collections.del(name)
+
+
 func getOpenCollection*(db: Database, name: string): Collection =
     ## Returns an already-opened Collection with the given name, or nil.
     return Collection(db.i_collections.getOrDefault(name))
@@ -156,6 +166,10 @@ proc openCollection*(db: Database,
         throw MDBX_NOTFOUND
     else:
         return coll
+
+
+proc closeCollection*(db: Database, name: string): bool =
+  closeDBI(db, name)
 
 
 proc createCollection*(db: Database,
